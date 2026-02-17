@@ -80,9 +80,11 @@ int xSize=100;
 int ySize=100;
 int scale=5;
 int index=0;
+int border=10;
+boolean sideBySide=true;
 void settings()
 {
-  size(xSize*scale*2, ySize*scale);
+  size(xSize*scale*2 + border, ySize*scale);
 }
 
 void setup() {
@@ -127,6 +129,8 @@ void keyPressed()
     step=true;
   if (key=='c')
     clearGame();
+  if (key=='d')
+    sideBySide=!sideBySide;
   if (key=='r')
     randomSeedGame();
 }
@@ -135,17 +139,20 @@ void draw() {
   background(255);
   if (step)
     updating=true;
-    
+
   if (updating)
     for (int i=0; i<xSize; i++)
       for (int j=0; j<ySize; j++)
         cells[i][j][index].update(cells, index);
-        
+
   int x=int(mouseX/scale);
   int y=int(mouseY/scale);
   int neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, true);  //calculate the neighbors under the mouse pointer
+  if (updating)
+    println("updating");
+  else
+    println("paused");
 
-  int otherIndex=index;
   if (index==0)
     index=1;
   else
@@ -159,7 +166,7 @@ void draw() {
         strokeColor=color(255, 0, 0);
       cells[i][j][0].draw(scale, color(0), strokeColor);
     }
-  translate(xSize*scale,0);
+  //translate(xSize*scale + border, 0);
   for (int i=0; i<xSize; i++)
     for (int j=0; j<ySize; j++)
     {
@@ -168,7 +175,7 @@ void draw() {
         strokeColor=color(255, 0, 0);
       cells[i][j][1].draw(scale, color(0), strokeColor);
     }
-  
+
 
   if (step)
   {
