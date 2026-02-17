@@ -59,8 +59,12 @@ class Cell {
       else
         cells[x][y][otherIndex].setState(true);
     }
-    if ((state==false) && (neighbors==3))  //ressurection rule
-      cells[x][y][otherIndex].setState(true);
+    if (state==false) {
+      if (neighbors==3)  //ressurection rule
+        cells[x][y][otherIndex].setState(true);
+      else
+        cells[x][y][otherIndex].setState(false);
+    }
   }
   void draw(int scale, color fillColor, color strokeColor)
   {
@@ -147,7 +151,12 @@ void draw() {
 
   int x=int(mouseX/scale);
   int y=int(mouseY/scale);
-  int neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, true);  //calculate the neighbors under the mouse pointer
+
+  int neighbors;
+  if (mouseX<xSize*scale)
+    neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, true);  //calculate the neighbors under the mouse pointer
+  else
+    neighbors=0;
   if (updating)
     println("updating");
   else
@@ -166,7 +175,8 @@ void draw() {
         strokeColor=color(255, 0, 0);
       cells[i][j][0].draw(scale, color(0), strokeColor);
     }
-  //translate(xSize*scale + border, 0);
+  if (sideBySide)
+    translate(xSize*scale + border, 0);  //put em side by side
   for (int i=0; i<xSize; i++)
     for (int j=0; j<ySize; j++)
     {
