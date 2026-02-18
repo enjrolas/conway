@@ -80,8 +80,8 @@ class Cell {
 Cell [][][] cells;
 boolean updating=true;
 boolean step=false;
-int xSize=100;
-int ySize=100;
+int xSize=200;
+int ySize=200;
 int scale=5;
 int index=0;
 int border=10;
@@ -135,7 +135,7 @@ void keyPressed()
   if (key=='c')
     clearGame();
   if (key=='d')
-    sideBySide=!sideBySide;
+    debug=!debug; 
   if (key=='r')
     randomSeedGame();
 }
@@ -155,16 +155,19 @@ void draw() {
 
   int neighbors=0;
   if (debug)
+  {
     neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, false);  //calculate the neighbors under the mouse pointer
-  if (updating)
-    println("updating");
-  else
-    println("paused");
-
-  if (index==0)
+    if (updating)
+      println("updating");
+    else
+      println("paused");
+  }
+  if(updating)
+    if (index==0)
     index=1;
   else
     index=0;
+
 
   translate(10, 10);
   for (int i=0; i<xSize; i++)
