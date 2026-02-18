@@ -86,9 +86,10 @@ int scale=5;
 int index=0;
 int border=10;
 boolean sideBySide=true;
+boolean debug=false;
 void settings()
 {
-  size(xSize*scale*2 + border, ySize*scale);
+  size(xSize*scale + border*2, ySize*scale+ border*2);
 }
 
 void setup() {
@@ -152,11 +153,9 @@ void draw() {
   int x=int(mouseX/scale);
   int y=int(mouseY/scale);
 
-  int neighbors;
-  if (mouseX<xSize*scale)
-    neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, true);  //calculate the neighbors under the mouse pointer
-  else
-    neighbors=0;
+  int neighbors=0;
+  if (debug)
+    neighbors=cells[x][y][index].calculateNumNeighbors(cells, index, false);  //calculate the neighbors under the mouse pointer
   if (updating)
     println("updating");
   else
@@ -167,23 +166,15 @@ void draw() {
   else
     index=0;
 
+  translate(10, 10);
   for (int i=0; i<xSize; i++)
     for (int j=0; j<ySize; j++)
     {
       color strokeColor=color(255);
-      if ((x==i) && (y==j))
-        strokeColor=color(255, 0, 0);
-      cells[i][j][0].draw(scale, color(0), strokeColor);
-    }
-  if (sideBySide)
-    translate(xSize*scale + border, 0);  //put em side by side
-  for (int i=0; i<xSize; i++)
-    for (int j=0; j<ySize; j++)
-    {
-      color strokeColor=color(255);
-      if ((x==i) && (y==j))
-        strokeColor=color(255, 0, 0);
-      cells[i][j][1].draw(scale, color(0), strokeColor);
+      if (debug)
+        if ((x==i) && (y==j))
+          strokeColor=color(255, 0, 0);
+      cells[i][j][index].draw(scale, color(0), strokeColor);
     }
 
 
@@ -192,7 +183,10 @@ void draw() {
     updating=false;
     step=false;
   }
-  textSize(30);
-  fill(255, 0, 0);
-  text(neighbors, mouseX+20, mouseY+20);
+
+  if (debug) {
+    textSize(30);
+    fill(255, 0, 0);
+    text(neighbors, mouseX+20, mouseY+20);
+  }
 }
